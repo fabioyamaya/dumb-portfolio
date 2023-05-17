@@ -1,0 +1,7 @@
+{
+  "extends": ["next", "plugin:@typescript-eslint/recommended", "prettier"],
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "warn"
+  }
+}
