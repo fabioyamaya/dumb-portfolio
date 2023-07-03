@@ -43,7 +43,7 @@ const HomeSegment = () => {
   return (
     <SimpleGrid
       column={2}
-      className="mx-36 my-auto flex h-full w-1/2 content-center "
+      className="absolute left-0 top-0 mx-36 my-auto flex h-full w-1/2 content-center"
     >
       <Flex
         as={motion.div}
@@ -53,13 +53,16 @@ const HomeSegment = () => {
         className="min-h-[500px] flex-col items-start justify-between"
       >
         <Flex className="flex-col items-end">
-          <motion.h1 variants={item} className="text-7xl font-bold">
+          <motion.h1
+            variants={item}
+            className="text-7xl font-bold tracking-tighter"
+          >
             Hey, I&apos;m Fabio Yamaya
           </motion.h1>
           <Text
             as={motion.i}
             variants={item}
-            className="font-thin text-slate-500"
+            className="leading font-thin text-slate-500"
             fontSize={"2xl"}
           >
             I do some frontend stuff
@@ -68,7 +71,7 @@ const HomeSegment = () => {
         <Text
           as={motion.p}
           variants={item}
-          className="font-thin"
+          className="font-thin leading-tight"
           fontSize={"5xl"}
         >
           and this is my take <br />
