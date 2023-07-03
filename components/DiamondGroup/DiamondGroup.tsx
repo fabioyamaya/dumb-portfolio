@@ -37,7 +37,7 @@ geometry.computeVertexNormals();
 const DiamondGroup = () => {
   const ref = useRef<{ distort: number }>();
   const [hovered, hover] = useState(false);
-  useCursor(hovered);
+  useCursor(hovered, "default");
   useFrame(() => {
     if (ref?.current)
       ref.current.distort = MathUtils.lerp(
