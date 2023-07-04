@@ -7,8 +7,7 @@ import DiamondGroup from "../DiamondGroup/DiamondGroup";
 const Canvas = () => (
   <ThreeCanvas gl={{ antialias: true, toneMapping: NoToneMapping }}>
     <Perf position="top-left" />
-    <OrthographicCamera makeDefault position={[0, 0, 500]} />
-    {/* <PerspectiveCamera makeDefault position={[0, 0, 500]} /> */}
+    <OrthographicCamera makeDefault position={[0, 0, 1000]} />
     <OrbitControls />
 
     <ambientLight intensity={1} />
