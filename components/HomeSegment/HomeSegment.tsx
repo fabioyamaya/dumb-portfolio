@@ -57,7 +57,7 @@ const HomeSegment = () => {
             variants={item}
             className="text-7xl font-bold tracking-tighter"
           >
-            Hey, I&apos;m Fabio Yamaya
+            Hey, I&apos;m Fábio Yamaya
           </motion.h1>
           <Text
             as={motion.i}
