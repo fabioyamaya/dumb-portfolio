@@ -84,8 +84,8 @@ const DiamondGroup = () => {
       }
     });
 
-    camera.position.x = scroll.offset * 1500;
-    camera.position.z = 1000 - scroll.offset * 1500;
+    camera.position.x = scroll.offset * 1700;
+    camera.position.z = 1000 - scroll.offset * 1700;
   });
 
   useCursor(hovered, "default");
@@ -101,14 +101,13 @@ const DiamondGroup = () => {
   return (
     <>
       <mesh
-        // rotation={[0, (Math.PI / 10) * 2, 0]}
         position={centralDiamondPosition}
         scale={[250, 350, 1]}
         geometry={geometry}
         onPointerOver={() => hover(true)}
         onPointerOut={() => hover(false)}
       >
-        <MeshDistortMaterial ref={ref} speed={5}>
+        <MeshDistortMaterial ref={ref} speed={6}>
           <GradientTexture stops={[0, 1]} colors={["#9dfffd", "white"]} />
         </MeshDistortMaterial>
       </mesh>
