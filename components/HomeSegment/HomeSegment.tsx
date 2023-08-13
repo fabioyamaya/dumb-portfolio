@@ -1,5 +1,5 @@
 import { Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { HiChevronDoubleDown } from "react-icons/hi";
 
@@ -45,40 +45,43 @@ const HomeSegment = () => {
       column={2}
       className="absolute left-0 top-0 mx-36 my-auto flex h-full w-1/2 content-center"
     >
-      <Flex
-        as={motion.div}
-        variants={variants}
-        initial="hidden"
-        animate="show"
-        className="min-h-[500px] flex-col items-start justify-between"
-      >
-        <Flex className="flex-col items-end">
-          <motion.h1
-            variants={item}
-            className="text-7xl font-bold tracking-tighter"
-          >
-            Hey, I&apos;m Fábio Yamaya
-          </motion.h1>
-          <Text
-            as={motion.i}
-            variants={item}
-            className="leading font-thin text-slate-500"
-            fontSize={"2xl"}
-          >
-            I do some frontend stuff
-          </Text>
-        </Flex>
-        <Text
-          as={motion.p}
-          variants={item}
-          className="font-thin leading-tight"
-          fontSize={"5xl"}
+      <AnimatePresence>
+        <Flex
+          as={motion.div}
+          variants={variants}
+          initial="hidden"
+          animate="show"
+          exit="hidden"
+          className="min-h-[500px] flex-col items-start justify-between"
         >
-          and this is my take <br />
-          on a dumb portfolio
-        </Text>
-        <MotionChakraIcon variants={item} />
-      </Flex>
+          <Flex className="flex-col items-end">
+            <motion.h1
+              variants={item}
+              className="text-7xl font-bold tracking-tighter"
+            >
+              Hey, I&apos;m Fábio Yamaya
+            </motion.h1>
+            <Text
+              as={motion.i}
+              variants={item}
+              className="leading font-thin text-slate-500"
+              fontSize={"2xl"}
+            >
+              I do some frontend stuff
+            </Text>
+          </Flex>
+          <Text
+            as={motion.p}
+            variants={item}
+            className="font-thin leading-tight"
+            fontSize={"5xl"}
+          >
+            and this is my take <br />
+            on a dumb portfolio
+          </Text>
+          <MotionChakraIcon variants={item} />
+        </Flex>
+      </AnimatePresence>
     </SimpleGrid>
   );
 };
