@@ -4,88 +4,56 @@ import {
   Instances,
   MeshDistortMaterial,
   useCursor,
-  useScroll,
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { useScroll } from "framer-motion";
 import { useRef, useState } from "react";
+import { InstancedMesh, MathUtils } from "three";
 import {
-  BufferAttribute,
-  BufferGeometry,
-  InstancedMesh,
-  MathUtils,
-} from "three";
+  animationConstants,
+  centralDiamondPosition,
+  diamondGeometry,
+} from "./constants";
 
-// prettier-ignore
-const vertices = new Float32Array([
-  -0.5,  0,  0, // v0
-   0.5,  0,  0, // v1
-   0  ,  1,  0, // v2
-     
-   0.5,  0,  0, // v3
-  -0.5,  0,  0, // v4
-   0  , -1,  0, // v5
-]);
-
-// prettier-ignore
-const uvs = new Float32Array([
-  0.0, 0.5,   // UV coordinate for Vertex 0
-  1.0, 0.5,   // UV coordinate for Vertex 1
-  0.5, 1.0,   // UV coordinate for Vertex 2
-
-  1.0, 0.5,   // UV coordinate for Vertex 3
-  0.0, 0.5,   // UV coordinate for Vertex 4
-  0.5, 0.0,   // UV coordinate for Vertex 5
-]);
-
-const centralDiamondPosition: [number, number, number] = [350, 0, 0];
-
-const animationConstants = [
-  { offset: Math.PI, speed: 50, radius: 200, yPos: 270 },
-  { offset: 0, speed: 20, radius: 350, yPos: 360 },
-  { offset: Math.PI, speed: 65, radius: 120, yPos: -125 },
-  { offset: Math.PI, speed: 40, radius: 500, yPos: -400 },
-  { offset: 0, speed: 100, radius: 300, yPos: -270 },
-  { offset: 0, speed: 30, radius: 200, yPos: -215 },
-];
-// [150, 270, -100],
-// [550, 360, 100],
-// [265, -125, 70],
-// [-125, -445, 200],
-// [525, -300, -150],
-// [535, -245, 0],
-
-const geometry = new BufferGeometry();
-geometry.setAttribute("position", new BufferAttribute(vertices, 3));
-geometry.setAttribute("uv", new BufferAttribute(uvs, 2));
-geometry.computeVertexNormals();
-
-const DiamondGroup = () => {
+interface Props {
+  scrollContainer: React.RefObject<HTMLDivElement>;
+}
+const DiamondGroup = ({ scrollContainer }: Props) => {
   const ref = useRef<{ distort: number }>();
 
   const diamondRefs = useRef<Array<InstancedMesh | null>>([]);
 
   const [hovered, hover] = useState(false);
 
-  const scroll = useScroll();
+  const { scrollYProgress } = useScroll({ container: scrollContainer });
 
-  useFrame(({ camera }) => {
+  const dampenedValue = useRef<number>(0);
+
+  useFrame(({ camera }, delta) => {
+    dampenedValue.current = MathUtils.damp(
+      dampenedValue.current,
+      scrollYProgress.get(),
+      1,
+      delta
+    );
+
+    const { current } = dampenedValue;
     diamondRefs.current.forEach((ref, i) => {
       if (ref) {
         const { radius, speed, offset, yPos } = animationConstants[i];
-        const { offset: scrollOffset } = scroll;
 
         ref.position.x =
           centralDiamondPosition[0] +
-          Math.cos(scrollOffset * speed + offset) * radius;
+          Math.cos(current * speed + offset) * radius;
         ref.position.z =
           centralDiamondPosition[2] +
-          Math.sin(scrollOffset * speed + offset) * radius;
-        ref.position.y = yPos + Math.cos(scrollOffset * speed + offset) * 50;
+          Math.sin(current * speed + offset) * radius;
+        ref.position.y = yPos + Math.cos(current * speed + offset) * 50;
       }
     });
 
-    camera.position.x = scroll.offset * 1700;
-    camera.position.z = 1000 - scroll.offset * 1700;
+    camera.position.x = current * 1700;
+    camera.position.z = 1000 - current * 1700;
   });
 
   useCursor(hovered, "default");
@@ -103,7 +71,7 @@ const DiamondGroup = () => {
       <mesh
         position={centralDiamondPosition}
         scale={[250, 350, 1]}
-        geometry={geometry}
+        geometry={diamondGeometry}
         onPointerOver={() => hover(true)}
         onPointerOut={() => hover(false)}
       >
@@ -111,7 +79,7 @@ const DiamondGroup = () => {
           <GradientTexture stops={[0, 1]} colors={["#9dfffd", "white"]} />
         </MeshDistortMaterial>
       </mesh>
-      <Instances geometry={geometry}>
+      <Instances geometry={diamondGeometry}>
         <meshBasicMaterial>
           <GradientTexture
             stops={[0, 0.5, 1]}
