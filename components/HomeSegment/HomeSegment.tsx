@@ -1,7 +1,7 @@
 import { AnimationStage } from "@/pages";
 import { Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiChevronDoubleDown } from "react-icons/hi";
 
 const variants = {
@@ -34,6 +34,23 @@ const item = {
   },
 };
 
+const sillyTerms = [
+  "software building",
+  "innovative bug designing",
+  "exception dodging",
+  "commit squashing",
+  "binary ballet",
+  "algorithm alchemy",
+  "code cuisine",
+  "syntax sorcery",
+  "function fandango",
+  "API acrobatics",
+  "freestyle debugging",
+  "loop symphonies",
+  "; DROP TABLE users;",
+  "keyboard mashing",
+];
+
 const MotionChakraIcon = motion(
   React.forwardRef<HTMLDivElement>(function ChevronDownIcon(_props, ref) {
     return (
@@ -49,55 +66,70 @@ interface Props {
   handleAnimationCycle: (animationStage: AnimationStage) => void;
 }
 const HomeSegment = React.forwardRef<HTMLDivElement, Props>(
-  ({ handleAnimationCycle }, ref) => (
-    <SimpleGrid
-      ref={ref}
-      column={2}
-      className="absolute left-0 top-0 mx-36 my-auto flex h-full w-1/2 content-center"
-    >
-      <Flex
-        as={motion.div}
-        variants={variants}
-        initial="hide"
-        animate="show"
-        exit="hide"
-        className="min-h-[500px] flex-col items-start justify-between"
-        onAnimationComplete={() => {
-          handleAnimationCycle(AnimationStage.end);
-        }}
-        onAnimationStart={() => {
-          handleAnimationCycle(AnimationStage.start);
-        }}
+  ({ handleAnimationCycle }, ref) => {
+    const [currentTermIndex, setCurrentTermIndex] = useState<number>(0);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setCurrentTermIndex((prevIndex) => (prevIndex + 1) % sillyTerms.length);
+      }, 5000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, []);
+
+    return (
+      <SimpleGrid
+        ref={ref}
+        column={2}
+        className="absolute left-0 top-0 mx-36 my-auto flex h-full w-1/2 content-center"
       >
-        <Flex className="flex-col items-end">
-          <motion.h1
-            variants={item}
-            className="text-7xl font-bold tracking-tighter"
-          >
-            hey, &nbsp;I&apos;m Fábio Yamaya
-          </motion.h1>
-          <Text
-            as={motion.i}
-            variants={item}
-            className="leading font-thin text-slate-500"
-            fontSize={"2xl"}
-          >
-            I do some software building
-          </Text>
-        </Flex>
-        <Text
-          as={motion.p}
-          variants={item}
-          className="font-thin leading-tight"
-          fontSize={"5xl"}
+        <Flex
+          as={motion.div}
+          variants={variants}
+          initial="hide"
+          animate="show"
+          exit="hide"
+          className="min-h-[500px] flex-col items-start justify-between"
+          onAnimationComplete={() => {
+            handleAnimationCycle(AnimationStage.end);
+          }}
+          onAnimationStart={() => {
+            handleAnimationCycle(AnimationStage.start);
+          }}
         >
-          and this is my take <br />
-          on a dumb portfolio
-        </Text>
-        <MotionChakraIcon variants={item} />
-      </Flex>
-    </SimpleGrid>
-  )
+          <Flex className="flex-col items-end">
+            <motion.h1
+              variants={item}
+              className="text-7xl font-bold tracking-tighter"
+            >
+              hey, &nbsp;I&apos;m Fábio Yamaya
+            </motion.h1>
+            <Text
+              as={motion.i}
+              key={currentTermIndex}
+              variants={item}
+              className="leading font-thin text-slate-500"
+              fontSize={"2xl"}
+            >
+              I do some {sillyTerms[currentTermIndex]}
+            </Text>
+          </Flex>
+          <Text
+            as={motion.p}
+            variants={item}
+            className="font-thin leading-tight"
+            fontSize={"5xl"}
+          >
+            and this is my take <br />
+            on a dumb portfolio
+          </Text>
+          <MotionChakraIcon variants={item} />
+        </Flex>
+      </SimpleGrid>
+    );
+  }
 );
 
 HomeSegment.displayName = "HomeSegments";
