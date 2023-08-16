@@ -1,21 +1,27 @@
+import { AnimationStage } from "@/pages";
 import { Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import React from "react";
 import { HiChevronDoubleDown } from "react-icons/hi";
 
 const variants = {
-  hidden: { opacity: 0 },
+  hide: {
+    transition: { staggerChildren: 0.1, staggerDirection: -1 },
+  },
   show: {
-    opacity: 1,
     transition: { staggerChildren: 0.2 },
   },
 };
 
 const item = {
-  hidden: {
+  hide: {
     opacity: 0,
     y: +70,
     atrrY: +70,
+    transition: {
+      duration: 0.7,
+      ease: [0.2, 0.59, 0.13, 0.94],
+    },
   },
   show: {
     opacity: 1,
@@ -39,51 +45,61 @@ const MotionChakraIcon = motion(
   { forwardMotionProps: true }
 );
 
-const HomeSegment = () => {
-  return (
+interface Props {
+  handleAnimationCycle: (animationStage: AnimationStage) => void;
+}
+const HomeSegment = React.forwardRef<HTMLDivElement, Props>(
+  ({ handleAnimationCycle }, ref) => (
     <SimpleGrid
+      ref={ref}
       column={2}
       className="absolute left-0 top-0 mx-36 my-auto flex h-full w-1/2 content-center"
     >
-      <AnimatePresence>
-        <Flex
-          as={motion.div}
-          variants={variants}
-          initial="hidden"
-          animate="show"
-          exit="hidden"
-          className="min-h-[500px] flex-col items-start justify-between"
-        >
-          <Flex className="flex-col items-end">
-            <motion.h1
-              variants={item}
-              className="text-7xl font-bold tracking-tighter"
-            >
-              Hey, I&apos;m Fábio Yamaya
-            </motion.h1>
-            <Text
-              as={motion.i}
-              variants={item}
-              className="leading font-thin text-slate-500"
-              fontSize={"2xl"}
-            >
-              I do some frontend stuff
-            </Text>
-          </Flex>
-          <Text
-            as={motion.p}
+      <Flex
+        as={motion.div}
+        variants={variants}
+        initial="hide"
+        animate="show"
+        exit="hide"
+        className="min-h-[500px] flex-col items-start justify-between"
+        onAnimationComplete={() => {
+          handleAnimationCycle(AnimationStage.end);
+        }}
+        onAnimationStart={() => {
+          handleAnimationCycle(AnimationStage.start);
+        }}
+      >
+        <Flex className="flex-col items-end">
+          <motion.h1
             variants={item}
-            className="font-thin leading-tight"
-            fontSize={"5xl"}
+            className="text-7xl font-bold tracking-tighter"
           >
-            and this is my take <br />
-            on a dumb portfolio
+            hey, &nbsp;I&apos;m Fábio Yamaya
+          </motion.h1>
+          <Text
+            as={motion.i}
+            variants={item}
+            className="leading font-thin text-slate-500"
+            fontSize={"2xl"}
+          >
+            I do some software building
           </Text>
-          <MotionChakraIcon variants={item} />
         </Flex>
-      </AnimatePresence>
+        <Text
+          as={motion.p}
+          variants={item}
+          className="font-thin leading-tight"
+          fontSize={"5xl"}
+        >
+          and this is my take <br />
+          on a dumb portfolio
+        </Text>
+        <MotionChakraIcon variants={item} />
+      </Flex>
     </SimpleGrid>
-  );
-};
+  )
+);
+
+HomeSegment.displayName = "HomeSegments";
 
 export default HomeSegment;
