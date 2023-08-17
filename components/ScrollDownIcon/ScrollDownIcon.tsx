@@ -24,9 +24,9 @@ const getTransition = (delay = 0) => {
   };
 };
 
-const ScrollDownIcon = React.forwardRef<HTMLDivElement>((_, ref) => {
-  const MotionChevron = motion(Chevron);
+const MotionChevron = motion(Chevron);
 
+const ScrollDownIcon = React.forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div ref={ref} className="relative h-[40px] w-[40px]">
       <MotionChevron animate={animation} transition={getTransition()} />

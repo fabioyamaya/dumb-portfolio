@@ -54,11 +54,11 @@ const sillyTerms = [
 interface Props {
   handleAnimationCycle: (animationStage: AnimationStage) => void;
 }
+const MotionScrollDownIcon = motion(ScrollDownIcon);
+
 const HomeSegment = React.forwardRef<HTMLDivElement, Props>(
   ({ handleAnimationCycle }, ref) => {
     const [currentTermIndex, setCurrentTermIndex] = useState<number>(0);
-
-    const MotionScrollDownIcon = motion(ScrollDownIcon);
 
     useEffect(() => {
       const termsIntervalId = setInterval(() => {
