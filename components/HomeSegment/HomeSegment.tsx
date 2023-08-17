@@ -1,8 +1,8 @@
 import { AnimationStage } from "@/pages";
-import { Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react";
+import { Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { HiChevronDoubleDown } from "react-icons/hi";
+import ScrollDownIcon from "../ScrollDownIcon/ScrollDownIcon";
 
 const variants = {
   hide: {
@@ -51,17 +51,6 @@ const sillyTerms = [
   "keyboard mashing",
 ];
 
-const MotionChakraIcon = motion(
-  React.forwardRef<HTMLDivElement>(function ChevronDownIcon(_props, ref) {
-    return (
-      <div ref={ref}>
-        <Icon as={HiChevronDoubleDown} boxSize={"10"} />
-      </div>
-    );
-  }),
-  { forwardMotionProps: true }
-);
-
 interface Props {
   handleAnimationCycle: (animationStage: AnimationStage) => void;
 }
@@ -69,13 +58,15 @@ const HomeSegment = React.forwardRef<HTMLDivElement, Props>(
   ({ handleAnimationCycle }, ref) => {
     const [currentTermIndex, setCurrentTermIndex] = useState<number>(0);
 
+    const MotionScrollDownIcon = motion(ScrollDownIcon);
+
     useEffect(() => {
-      const intervalId = setInterval(() => {
+      const termsIntervalId = setInterval(() => {
         setCurrentTermIndex((prevIndex) => (prevIndex + 1) % sillyTerms.length);
       }, 5000);
 
       return () => {
-        clearInterval(intervalId);
+        clearInterval(termsIntervalId);
       };
     }, []);
 
@@ -125,7 +116,7 @@ const HomeSegment = React.forwardRef<HTMLDivElement, Props>(
             and this is my take <br />
             on a dumb portfolio
           </Text>
-          <MotionChakraIcon variants={item} />
+          <MotionScrollDownIcon variants={item} />
         </Flex>
       </SimpleGrid>
     );

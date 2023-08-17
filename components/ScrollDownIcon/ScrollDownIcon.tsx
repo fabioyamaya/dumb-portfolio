@@ -2,9 +2,9 @@ import { TargetAndTransition, motion } from "framer-motion";
 import React from "react";
 
 const Chevron = React.forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="absolute h-[6px] w-[28px]">
-    <div className="absolute left-0 top-0 h-full w-[51%] skew-y-[30deg] bg-white" />
-    <div className="absolute right-0 top-0 h-full w-[51%] skew-y-[-30deg] bg-white" />
+  <div ref={ref} className="absolute h-[6px] w-[36px]">
+    <div className="absolute left-0 top-0 h-full w-[51%] skew-y-[30deg] bg-zinc-800" />
+    <div className="absolute right-0 top-0 h-full w-[51%] skew-y-[-30deg] bg-zinc-800" />
   </div>
 ));
 Chevron.displayName = "Chevron";
@@ -24,18 +24,17 @@ const getTransition = (delay = 0) => {
   };
 };
 
-const ScrollDownIcon = () => {
+const ScrollDownIcon = React.forwardRef<HTMLDivElement>((_, ref) => {
   const MotionChevron = motion(Chevron);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-gray-900">
-      <div className="relative h-[24px] w-[24px]">
-        <MotionChevron animate={animation} transition={getTransition()} />
-        <MotionChevron animate={animation} transition={getTransition(1)} />
-        <MotionChevron animate={animation} transition={getTransition(2)} />
-      </div>
+    <div ref={ref} className="relative h-[40px] w-[40px]">
+      <MotionChevron animate={animation} transition={getTransition()} />
+      <MotionChevron animate={animation} transition={getTransition(1)} />
+      <MotionChevron animate={animation} transition={getTransition(2)} />
     </div>
   );
-};
+});
+ScrollDownIcon.displayName = "ScrollDownIcon";
 
 export default ScrollDownIcon;
