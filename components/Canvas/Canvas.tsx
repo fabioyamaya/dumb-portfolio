@@ -12,7 +12,7 @@ interface Props {
 const Canvas = ({ scrollContainer, currentSegment }: Props) => (
   <ThreeCanvas gl={{ antialias: true, toneMapping: NoToneMapping }}>
     <Perf position="top-left" />
-    <PerspectiveCamera makeDefault position={[0, 0, 1000]} />
+    <PerspectiveCamera makeDefault />
     {/* <OrbitControls /> */}
 
     <ambientLight intensity={1} />
