@@ -14,21 +14,29 @@ interface Props {
 const DiamondPortal = ({ isInsidePortal }: Props) => {
   const portalRef = useRef<PortalMaterialType | null>(null);
   useFrame((_, delta) => {
-    if (portalRef?.current)
-      portalRef.current.blend = MathUtils.damp(
-        portalRef.current.blend,
-        isInsidePortal ? 1 : 0,
-        5,
-        delta
+    let dampenedBlend = 0;
+    if (portalRef?.current) {
+      dampenedBlend = parseFloat(
+        MathUtils.damp(
+          portalRef.current.blend,
+          isInsidePortal ? 1 : 0,
+          5,
+          delta
+        ).toFixed(5)
       );
+
+      if (dampenedBlend <= 0.003) portalRef.current.blend = 0;
+      else portalRef.current.blend = dampenedBlend;
+    }
   });
+
   return (
     <mesh
       position={centralDiamondPosition}
       scale={[250, 350, 1]}
       geometry={diamondGeometry}
     >
-      <MeshPortalMaterial ref={portalRef} events={isInsidePortal}>
+      <MeshPortalMaterial ref={portalRef}>
         <color attach="background" args={["#9dfffd"]} />
       </MeshPortalMaterial>
     </mesh>
