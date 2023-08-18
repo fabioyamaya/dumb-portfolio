@@ -1,3 +1,4 @@
+import { Segments } from "@/pages";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Canvas as ThreeCanvas } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
@@ -6,15 +7,19 @@ import DiamondGroup from "../DiamondGroup/DiamondGroup";
 
 interface Props {
   scrollContainer: React.RefObject<HTMLDivElement>;
+  currentSegment: Segments;
 }
-const Canvas = ({ scrollContainer }: Props) => (
+const Canvas = ({ scrollContainer, currentSegment }: Props) => (
   <ThreeCanvas gl={{ antialias: true, toneMapping: NoToneMapping }}>
     <Perf position="top-left" />
     <PerspectiveCamera makeDefault position={[0, 0, 1000]} />
     {/* <OrbitControls /> */}
 
     <ambientLight intensity={1} />
-    <DiamondGroup scrollContainer={scrollContainer} />
+    <DiamondGroup
+      scrollContainer={scrollContainer}
+      currentSegment={currentSegment}
+    />
   </ThreeCanvas>
 );
 

@@ -1,14 +1,10 @@
-import {
-  GradientTexture,
-  Instance,
-  Instances,
-  MeshDistortMaterial,
-  useCursor,
-} from "@react-three/drei";
+import { Segments } from "@/pages";
+import { GradientTexture, Instance, Instances } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useScroll } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { InstancedMesh, MathUtils } from "three";
+import DiamondPortal from "../DiamondPortal/DiamondPortal";
 import {
   animationConstants,
   centralDiamondPosition,
@@ -17,27 +13,28 @@ import {
 
 interface Props {
   scrollContainer: React.RefObject<HTMLDivElement>;
+  currentSegment: Segments;
 }
-const DiamondGroup = ({ scrollContainer }: Props) => {
-  const ref = useRef<{ distort: number }>();
+const DiamondGroup = ({ scrollContainer, currentSegment }: Props) => {
+  // const ref = useRef<{ distort: number }>();
 
   const diamondRefs = useRef<Array<InstancedMesh | null>>([]);
 
-  const [hovered, hover] = useState(false);
+  // const [hovered, hover] = useState(false);
 
   const { scrollYProgress } = useScroll({ container: scrollContainer });
 
-  const dampenedValue = useRef<number>(0);
+  const dampenedScrollValue = useRef<number>(0);
 
   useFrame(({ camera }, delta) => {
-    dampenedValue.current = MathUtils.damp(
-      dampenedValue.current,
+    dampenedScrollValue.current = MathUtils.damp(
+      dampenedScrollValue.current,
       scrollYProgress.get(),
       1,
       delta
     );
 
-    const { current } = dampenedValue;
+    const { current } = dampenedScrollValue;
     diamondRefs.current.forEach((ref, i) => {
       if (ref) {
         const { radius, speed, offset, yPos } = animationConstants[i];
@@ -56,34 +53,26 @@ const DiamondGroup = ({ scrollContainer }: Props) => {
     camera.position.z = 1000 - current * 1700;
   });
 
-  useCursor(hovered, "default");
-  useFrame(() => {
-    if (ref?.current)
-      ref.current.distort = MathUtils.lerp(
-        ref?.current?.distort,
-        hovered ? 0.4 : 0,
-        hovered ? 0.05 : 0.01
-      );
-  });
+  // useCursor(hovered, "default");
+  // useFrame(() => {
+  //   if (ref?.current)
+  //     ref.current.distort = MathUtils.lerp(
+  //       ref?.current?.distort,
+  //       hovered ? 0.4 : 0,
+  //       hovered ? 0.05 : 0.01
+  //     );
+  // });
 
   return (
     <>
-      <mesh
-        position={centralDiamondPosition}
-        scale={[250, 350, 1]}
-        geometry={diamondGeometry}
-        onPointerOver={() => hover(true)}
-        onPointerOut={() => hover(false)}
-      >
-        <MeshDistortMaterial ref={ref} speed={6}>
-          <GradientTexture stops={[0, 1]} colors={["#9dfffd", "white"]} />
-        </MeshDistortMaterial>
-      </mesh>
+      <DiamondPortal
+        isInsidePortal={currentSegment === Segments.introduction}
+      />
       <Instances geometry={diamondGeometry}>
         <meshBasicMaterial>
           <GradientTexture
             stops={[0, 0.5, 1]}
-            colors={["#85fff9", "#f0bdff", "#ffda97ff"]}
+            colors={["#85fff9", "#f5d6ff", "#ffeecf"]}
           />
         </meshBasicMaterial>
         <Instance

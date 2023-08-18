@@ -8,9 +8,10 @@ import {
 } from "framer-motion";
 import { useRef, useState } from "react";
 
-enum Segments {
+export enum Segments {
   none,
   home,
+  introduction,
 }
 
 export enum AnimationStage {
@@ -29,7 +30,7 @@ const Home = () => {
   const switchSegments = () => {
     if (isAnimatingSegment.current) return;
     const newSegment =
-      scrollYProgress.get() > 0.2 ? Segments.none : Segments.home;
+      scrollYProgress.get() > 0.2 ? Segments.introduction : Segments.home;
     if (newSegment !== segment) {
       setSegment(newSegment);
     }
@@ -60,7 +61,10 @@ const Home = () => {
             )}
           </AnimatePresence>
 
-          <Canvas scrollContainer={scrollContainerRef} />
+          <Canvas
+            scrollContainer={scrollContainerRef}
+            currentSegment={segment}
+          />
         </div>
         <div className="pointer-events-none h-[300vh] w-full" />
       </div>
