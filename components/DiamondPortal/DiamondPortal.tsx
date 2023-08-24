@@ -14,20 +14,13 @@ interface Props {
 const DiamondPortal = ({ isInsidePortal }: Props) => {
   const portalRef = useRef<PortalMaterialType | null>(null);
   useFrame((_, delta) => {
-    let dampenedBlend = 0;
-    if (portalRef?.current) {
-      dampenedBlend = parseFloat(
-        MathUtils.damp(
-          portalRef.current.blend,
-          isInsidePortal ? 1 : 0,
-          5,
-          delta
-        ).toFixed(5)
+    if (portalRef?.current)
+      portalRef.current.blend = MathUtils.damp(
+        portalRef.current.blend,
+        isInsidePortal ? 1 : 0,
+        5,
+        delta
       );
-
-      if (dampenedBlend <= 0.003) portalRef.current.blend = 0;
-      else portalRef.current.blend = dampenedBlend;
-    }
   });
 
   return (

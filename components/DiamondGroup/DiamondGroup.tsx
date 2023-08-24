@@ -50,7 +50,7 @@ const DiamondGroup = ({ scrollContainer, currentSegment }: Props) => {
     });
 
     camera.position.x = current * 1700;
-    camera.position.z = 1000 - current * 1700;
+    camera.position.z = 700 - current * 1700;
   });
 
   // useCursor(hovered, "default");

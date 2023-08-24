@@ -1,5 +1,4 @@
 import { Segments } from "@/pages";
-import { PerspectiveCamera } from "@react-three/drei";
 import { Canvas as ThreeCanvas } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
 import { NoToneMapping } from "three";
@@ -10,10 +9,14 @@ interface Props {
   currentSegment: Segments;
 }
 const Canvas = ({ scrollContainer, currentSegment }: Props) => (
-  <ThreeCanvas gl={{ antialias: true, toneMapping: NoToneMapping }}>
+  <ThreeCanvas
+    gl={{
+      antialias: true,
+      toneMapping: NoToneMapping,
+    }}
+    camera={{ far: 4000 }}
+  >
     <Perf position="top-left" />
-    <PerspectiveCamera makeDefault />
-    {/* <OrbitControls /> */}
 
     <ambientLight intensity={1} />
     <DiamondGroup

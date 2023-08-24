@@ -32,12 +32,6 @@ const animationConstants = [
   { offset: 0, speed: 100, radius: 300, yPos: -270 },
   { offset: 0, speed: 30, radius: 200, yPos: -215 },
 ];
-// [150, 270, -100],
-// [550, 360, 100],
-// [265, -125, 70],
-// [-125, -445, 200],
-// [525, -300, -150],
-// [535, -245, 0],
 
 const diamondGeometry = new BufferGeometry();
 diamondGeometry.setAttribute("position", new BufferAttribute(vertices, 3));
