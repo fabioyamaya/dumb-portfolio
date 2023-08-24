@@ -1,5 +1,10 @@
 import { Segments } from "@/pages";
-import { GradientTexture, Instance, Instances } from "@react-three/drei";
+import {
+  GradientTexture,
+  Instance,
+  Instances,
+  MeshDistortMaterial,
+} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useScroll } from "framer-motion";
 import { useRef } from "react";
@@ -16,11 +21,7 @@ interface Props {
   currentSegment: Segments;
 }
 const DiamondGroup = ({ scrollContainer, currentSegment }: Props) => {
-  // const ref = useRef<{ distort: number }>();
-
   const diamondRefs = useRef<Array<InstancedMesh | null>>([]);
-
-  // const [hovered, hover] = useState(false);
 
   const { scrollYProgress } = useScroll({ container: scrollContainer });
 
@@ -53,28 +54,18 @@ const DiamondGroup = ({ scrollContainer, currentSegment }: Props) => {
     camera.position.z = 700 - current * 1700;
   });
 
-  // useCursor(hovered, "default");
-  // useFrame(() => {
-  //   if (ref?.current)
-  //     ref.current.distort = MathUtils.lerp(
-  //       ref?.current?.distort,
-  //       hovered ? 0.4 : 0,
-  //       hovered ? 0.05 : 0.01
-  //     );
-  // });
-
   return (
     <>
       <DiamondPortal
         isInsidePortal={currentSegment === Segments.introduction}
       />
       <Instances geometry={diamondGeometry}>
-        <meshBasicMaterial>
+        <MeshDistortMaterial speed={3}>
           <GradientTexture
             stops={[0, 0.5, 1]}
             colors={["#85fff9", "#f5d6ff", "#ffeecf"]}
           />
-        </meshBasicMaterial>
+        </MeshDistortMaterial>
         <Instance
           ref={(ref: InstancedMesh) => (diamondRefs.current[0] = ref)}
           scale={[40, 35, 1]}
