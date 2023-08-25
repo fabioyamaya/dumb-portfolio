@@ -1,3 +1,4 @@
+import { useProgressValue } from "@/contexts/ProgressValueContext";
 import { Segments } from "@/pages";
 import {
   GradientTexture,
@@ -6,9 +7,8 @@ import {
   MeshDistortMaterial,
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useScroll } from "framer-motion";
 import { useRef } from "react";
-import { InstancedMesh, MathUtils } from "three";
+import { InstancedMesh } from "three";
 import DiamondPortal from "../DiamondPortal/DiamondPortal";
 import {
   animationConstants,
@@ -17,41 +17,34 @@ import {
 } from "./constants";
 
 interface Props {
-  scrollContainer: React.RefObject<HTMLDivElement>;
   currentSegment: Segments;
 }
-const DiamondGroup = ({ scrollContainer, currentSegment }: Props) => {
+const DiamondGroup = ({ currentSegment }: Props) => {
   const diamondRefs = useRef<Array<InstancedMesh | null>>([]);
 
-  const { scrollYProgress } = useScroll({ container: scrollContainer });
+  const { getDampenedValue } = useProgressValue();
 
-  const dampenedScrollValue = useRef<number>(0);
+  useFrame(({ camera }) => {
+    const dampenedValue = getDampenedValue();
 
-  useFrame(({ camera }, delta) => {
-    dampenedScrollValue.current = MathUtils.damp(
-      dampenedScrollValue.current,
-      scrollYProgress.get(),
-      1,
-      delta
-    );
-
-    const { current } = dampenedScrollValue;
     diamondRefs.current.forEach((ref, i) => {
       if (ref) {
         const { radius, speed, offset, yPos } = animationConstants[i];
 
         ref.position.x =
           centralDiamondPosition[0] +
-          Math.cos(current * speed + offset) * radius;
+          Math.cos(dampenedValue * speed + offset) * radius;
         ref.position.z =
           centralDiamondPosition[2] +
-          Math.sin(current * speed + offset) * radius;
-        ref.position.y = yPos + Math.cos(current * speed + offset) * 50;
+          Math.sin(dampenedValue * speed + offset) * radius;
+        ref.position.y = yPos + Math.cos(dampenedValue * speed + offset) * 50;
       }
     });
 
-    camera.position.x = current * 1700;
-    camera.position.z = 700 - current * 1700;
+    if (dampenedValue < Segments.home) {
+      camera.position.x = dampenedValue * 1700;
+      camera.position.z = 700 - dampenedValue * 1700;
+    }
   });
 
   return (

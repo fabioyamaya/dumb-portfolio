@@ -1,5 +1,6 @@
 import Canvas from "@/components/Canvas/Canvas";
 import HomeSegment from "@/components/HomeSegment/HomeSegment";
+import { ProgressValueContextProvider } from "@/contexts/ProgressValueContext";
 import {
   AnimatePresence,
   motion,
@@ -9,9 +10,9 @@ import {
 import { useRef, useState } from "react";
 
 export enum Segments {
-  none,
-  home,
-  introduction,
+  none = 0,
+  home = 0.2,
+  introduction = 0.4,
 }
 
 export enum AnimationStage {
@@ -29,8 +30,11 @@ const Home = () => {
 
   const switchSegments = () => {
     if (isAnimatingSegment.current) return;
+
     const newSegment =
-      scrollYProgress.get() > 0.2 ? Segments.introduction : Segments.home;
+      scrollYProgress.get() > Segments.home
+        ? Segments.introduction
+        : Segments.home;
     if (newSegment !== segment) {
       setSegment(newSegment);
     }
@@ -54,19 +58,24 @@ const Home = () => {
         className="absolute left-0 top-0 h-screen w-screen overflow-y-auto overflow-x-hidden "
         ref={scrollContainerRef}
       >
-        <div className="sticky left-0 top-0 h-screen w-screen bg-gradient-pastel-home text-zinc-800">
-          <AnimatePresence>
-            {segment === Segments.home && (
-              <MotionHomeSegment handleAnimationCycle={handleAnimationCycle} />
-            )}
-          </AnimatePresence>
+        <ProgressValueContextProvider>
+          <div className="sticky left-0 top-0 h-screen w-screen bg-gradient-pastel-home text-zinc-800">
+            <AnimatePresence>
+              {segment === Segments.home && (
+                <MotionHomeSegment
+                  handleAnimationCycle={handleAnimationCycle}
+                />
+              )}
+            </AnimatePresence>
 
-          <Canvas
-            scrollContainer={scrollContainerRef}
-            currentSegment={segment}
-          />
-        </div>
-        <div className="pointer-events-none h-[300vh] w-full" />
+            <Canvas
+              scrollContainer={scrollContainerRef}
+              currentSegment={segment}
+            />
+          </div>
+
+          <div className="pointer-events-none h-[300vh] w-full" />
+        </ProgressValueContextProvider>
       </div>
     </>
   );

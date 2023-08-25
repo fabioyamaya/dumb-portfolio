@@ -3,6 +3,7 @@ import { Canvas as ThreeCanvas } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
 import { NoToneMapping } from "three";
 import DiamondGroup from "../DiamondGroup/DiamondGroup";
+import DampenedScrollControl from "./DampenedScrollControl";
 
 interface Props {
   scrollContainer: React.RefObject<HTMLDivElement>;
@@ -19,10 +20,10 @@ const Canvas = ({ scrollContainer, currentSegment }: Props) => (
     <Perf position="top-left" />
 
     <ambientLight intensity={1} />
-    <DiamondGroup
-      scrollContainer={scrollContainer}
-      currentSegment={currentSegment}
-    />
+
+    <DampenedScrollControl scrollContainer={scrollContainer} />
+
+    <DiamondGroup currentSegment={currentSegment} />
   </ThreeCanvas>
 );
 
