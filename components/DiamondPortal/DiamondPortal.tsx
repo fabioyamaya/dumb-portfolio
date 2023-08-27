@@ -1,3 +1,4 @@
+import useStore, { Segments } from "@/state/UseStore";
 import { MeshPortalMaterial, PortalMaterialType } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
@@ -7,17 +8,14 @@ import {
   diamondGeometry,
 } from "../DiamondGroup/constants";
 
-interface Props {
-  isInsidePortal: boolean;
-}
-
-const DiamondPortal = ({ isInsidePortal }: Props) => {
+const DiamondPortal = () => {
+  const currentSegment = useStore((state) => state.currentSegment);
   const portalRef = useRef<PortalMaterialType | null>(null);
   useFrame((_, delta) => {
     if (portalRef?.current)
       portalRef.current.blend = MathUtils.damp(
         portalRef.current.blend,
-        isInsidePortal ? 1 : 0,
+        currentSegment === Segments.introduction ? 1 : 0,
         5,
         delta
       );

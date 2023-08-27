@@ -1,5 +1,4 @@
-import { useProgressValue } from "@/contexts/ProgressValueContext";
-import { Segments } from "@/pages";
+import useStore, { Segments } from "@/state/UseStore";
 import {
   GradientTexture,
   Instance,
@@ -7,7 +6,7 @@ import {
   MeshDistortMaterial,
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { InstancedMesh } from "three";
 import DiamondPortal from "../DiamondPortal/DiamondPortal";
 import {
@@ -16,42 +15,43 @@ import {
   diamondGeometry,
 } from "./constants";
 
-interface Props {
-  currentSegment: Segments;
-}
-const DiamondGroup = ({ currentSegment }: Props) => {
+const DiamondGroup = () => {
   const diamondRefs = useRef<Array<InstancedMesh | null>>([]);
+  const dampenedValue = useRef<number>(useStore.getState().dampenedScrollValue);
 
-  const { getDampenedValue } = useProgressValue();
+  useEffect(
+    () =>
+      useStore.subscribe(
+        (state) => (dampenedValue.current = state.dampenedScrollValue)
+      ),
+    []
+  );
 
   useFrame(({ camera }) => {
-    const dampenedValue = getDampenedValue();
-
+    const { current } = dampenedValue;
     diamondRefs.current.forEach((ref, i) => {
       if (ref) {
         const { radius, speed, offset, yPos } = animationConstants[i];
 
         ref.position.x =
           centralDiamondPosition[0] +
-          Math.cos(dampenedValue * speed + offset) * radius;
+          Math.cos(current * speed + offset) * radius;
         ref.position.z =
           centralDiamondPosition[2] +
-          Math.sin(dampenedValue * speed + offset) * radius;
-        ref.position.y = yPos + Math.cos(dampenedValue * speed + offset) * 50;
+          Math.sin(current * speed + offset) * radius;
+        ref.position.y = yPos + Math.cos(current * speed + offset) * 50;
       }
     });
 
-    if (dampenedValue < Segments.home) {
-      camera.position.x = dampenedValue * 1700;
-      camera.position.z = 700 - dampenedValue * 1700;
+    if (current < Segments.home) {
+      camera.position.x = current * 1700;
+      camera.position.z = 700 - current * 1700;
     }
   });
 
   return (
     <>
-      <DiamondPortal
-        isInsidePortal={currentSegment === Segments.introduction}
-      />
+      <DiamondPortal />
       <Instances geometry={diamondGeometry}>
         <MeshDistortMaterial speed={3}>
           <GradientTexture

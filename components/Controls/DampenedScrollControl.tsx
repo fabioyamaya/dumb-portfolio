@@ -1,4 +1,4 @@
-import { useProgressValue } from "@/contexts/ProgressValueContext";
+import useStore from "@/state/UseStore";
 import { useFrame } from "@react-three/fiber";
 import { useScroll } from "framer-motion";
 
@@ -8,10 +8,15 @@ interface Props {
 
 const DampenedScrollControl = ({ scrollContainer }: Props) => {
   const { scrollYProgress } = useScroll({ container: scrollContainer });
-  const { updateDampenedValue } = useProgressValue();
+
+  const updateDampenedValue = useStore(
+    (state) => state.updateDampenedScrollValue
+  );
 
   useFrame((_, delta) => {
-    updateDampenedValue(scrollYProgress.get(), delta);
+    // console.log(scrollYProgress.get());
+    const newYProgress = updateDampenedValue(scrollYProgress.get(), delta);
+    if (newYProgress) scrollYProgress.set(newYProgress);
   });
 
   return null;
