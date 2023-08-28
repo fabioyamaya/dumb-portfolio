@@ -14,9 +14,7 @@ const DampenedScrollControl = ({ scrollContainer }: Props) => {
   );
 
   useFrame((_, delta) => {
-    // console.log(scrollYProgress.get());
-    const newYProgress = updateDampenedValue(scrollYProgress.get(), delta);
-    if (newYProgress) scrollYProgress.set(newYProgress);
+    updateDampenedValue(scrollYProgress.get(), delta);
   });
 
   return null;

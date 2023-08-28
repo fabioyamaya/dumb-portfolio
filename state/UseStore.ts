@@ -4,7 +4,8 @@ import { create } from "zustand";
 export enum Segments {
   none = 0,
   home = 0.2,
-  introduction = 0.4,
+  introduction = 0.3,
+  transition,
 }
 
 interface State {
@@ -33,25 +34,15 @@ const setNewSegment = (newSegment: Segments) => {
 
 const handleSegmentSwitch = (
   isAnimatingSegmentTransition: boolean,
-  dampenedValue: number,
-  isIncreasing: boolean
+  dampenedValue: number
 ): number | undefined => {
   if (isAnimatingSegmentTransition) return;
-  const currentSegment = useStore.getState().currentSegment;
-  if (
-    currentSegment === Segments.home &&
-    isIncreasing &&
-    dampenedValue > Segments.home
-  ) {
+  if (dampenedValue > Segments.home && dampenedValue < Segments.introduction) {
+    setNewSegment(Segments.transition);
+  } else if (dampenedValue > Segments.home) {
     setNewSegment(Segments.introduction);
-    return Segments.home + 0.1;
-  } else if (
-    currentSegment === Segments.introduction &&
-    !isIncreasing &&
-    dampenedValue < Segments.introduction - 0.1
-  ) {
+  } else if (dampenedValue < Segments.introduction) {
     setNewSegment(Segments.home);
-    return Segments.introduction - 0.1;
   }
 };
 
@@ -70,10 +61,8 @@ const useStore = create<State & Actions>()((set, get) => ({
     const dampenedValue = get().dampenedScrollValue;
     const newYProgress = handleSegmentSwitch(
       get().isAnimatingSegmentTransition,
-      dampenedValue,
-      target > dampenedValue
+      dampenedValue
     );
-    // console.log(get().dampenedScrollValue);
     return newYProgress;
   },
   currentSegment: Segments.home,
