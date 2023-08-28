@@ -1,4 +1,4 @@
-import useStore, { Segments } from "@/state/UseStore";
+import useStore from "@/state/UseStore";
 import {
   GradientTexture,
   Instance,
@@ -27,7 +27,7 @@ const DiamondGroup = () => {
     []
   );
 
-  useFrame(({ camera }) => {
+  useFrame(() => {
     const { current } = dampenedValue;
     diamondRefs.current.forEach((ref, i) => {
       if (ref) {
@@ -42,11 +42,6 @@ const DiamondGroup = () => {
         ref.position.y = yPos + Math.cos(current * speed + offset) * 50;
       }
     });
-
-    if (current < Segments.home) {
-      camera.position.x = current * 1700;
-      camera.position.z = 700 - current * 1700;
-    }
   });
 
   return (

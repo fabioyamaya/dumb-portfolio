@@ -15,7 +15,10 @@ const DiamondPortal = () => {
     if (portalRef?.current)
       portalRef.current.blend = MathUtils.damp(
         portalRef.current.blend,
-        currentSegment === Segments.introduction ? 1 : 0,
+        currentSegment === Segments.introduction ||
+          currentSegment === Segments.transition
+          ? 1
+          : 0,
         5,
         delta
       );
